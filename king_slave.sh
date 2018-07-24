@@ -29,6 +29,7 @@ rm -rf $BR_LOC/$BARE_REPO_SLAVE_2
                 	git add readme.txt
                 	git commit -m "Initial commit slave1"
                 	git push origin master
+	cd $WD_LOC
 		git clone $BR_LOC/$BARE_REPO_SLAVE_2
                 cd $WD_LOC/$CLONE_SLAVE2
                         echo "Initial commit slave2" >> readme.txt
@@ -43,33 +44,36 @@ rm -rf $BR_LOC/$BARE_REPO_SLAVE_2
 		git push origin master
 		git remote add slave1 $BR_LOC/$BARE_REPO_SLAVE_1
 		git remote add slave2 $BR_LOC/$BARE_REPO_SLAVE_2
+			### Update remote changes ###
+		git fetch slave1
+		git fetch slave2
 			### Creating local copy of branch slave1 ###
-
-		echo "                     "
 		git checkout -b slave1_master slave1/master
 		git branch -a -vv
 			### creating new commit on slave1_master branch ###
 		echo "commit Slave1" >> slave1.txt
 		git add slave1.txt
                 git commit -m "commit slave1"
-                git push slave1 master
+                git push slave1 slave1_master:master
 			### Creating local copy of branch slave2 ###
-                echo "      "
 		git checkout -b slave2_master slave2/master
                 git branch -a -vv
-			### creating new commit on slave2_master branch ###
-		echo "commit Slave2" >> slave2.txt
+                        ### creating new commit on slave1_master branch ###
+                echo "commit Slave2" >> slave2.txt
                 git add slave2.txt
                 git commit -m "commit slave2"
-                git push slave2 master
+                git push slave2 slave2_master:master
+
 		git checkout master
 
 	### CHECKING RESULT ###
         cd $WD_LOC/$CLONE_SLAVE1
 		echo "SLAVE1"
+		git pull
 		cat slave1.txt
 		ls -a
 	cd $WD_LOC/$CLONE_SLAVE2
                 echo "SLAVE2"
+		git pull
                 cat slave2.txt
 		ls -a
